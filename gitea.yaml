@@ -3,6 +3,38 @@ kind: Namespace
 metadata:
   name: gitea
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitea-pv
+  namespace: gitea 
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 5Gi 
+  accessModes:
+    - ReadWriteMany 
+  persistentVolumeReclaimPolicy: Retain 
+  nfs:
+    path: /mnt/hd1/kubernetes/gitea 
+    server: 192.168.18.100 
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitea-pvc 
+  namespace: gitea
+spec:
+  storageClassName: ""
+  volumeName: 
+  accessModes:
+    - ReadWriteMany 
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi 
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,38 +67,6 @@ spec:
         - name: git-data
           persistentVolumeClaim:
             claimName: gitea-pvc
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: gitea-pv
-  namespace: gitea 
-spec:
-  storageClassName: ""
-  capacity:
-    storage: 5Gi 
-  accessModes:
-    - ReadWriteMany 
-  persistentVolumeReclaimPolicy: Retain 
-  nfs:
-    path: /mnt/hd1/kubernetes/gitea 
-    server: 192.168.18.100 
-    readOnly: false
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: gitea-pvc 
-  namespace: gitea
-spec:
-  storageClassName: ""
-  volumeName: 
-  accessModes:
-    - ReadWriteMany 
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 5Gi 
 ---
 apiVersion: v1
 kind: Service
