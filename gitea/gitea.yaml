@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitea
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: gitea
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+        - name: gitea
+          image: gitea/gitea:1.13.2
+          ports:
+            - containerPort: 3000
+              name: gitea
+            - containerPort: 22
+              name: git-ssh
+          volumeMounts:
+            - mountPath: /data
+              name: git-data
+      volumes:
+        - name: git-data
+          persistentVolumeClaim:
+            claimName: gitea-pvc
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitea-pv
+  namespace: gitea 
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 5Gi 
+  accessModes:
+    - ReadWriteMany 
+  persistentVolumeReclaimPolicy: Retain 
+  nfs:
+    path: /mnt/hd1/kubernetes/gitea 
+    server: 192.168.18.100 
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitea-pvc 
+  namespace: gitea
+spec:
+  storageClassName: ""
+  volumeName: 
+  accessModes:
+    - ReadWriteMany 
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea
+  namespace: gitea
+  labels:
+    app: gitea
+spec:
+  selector:
+    app: gitea
+  type: LoadBalancer
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: 3000
+    - port: 22
+      name: ssh
+      targetPort: 22
+      protocol: TCP
+  type: LoadBalancer
+  loadBalancerIP: 192.168.18.140 
+
