@@ -27,7 +27,7 @@ metadata:
   namespace: gitea
 spec:
   storageClassName: ""
-  volumeName: 
+  volumeName: gitea-pv
   accessModes:
     - ReadWriteMany 
   volumeMode: Filesystem
