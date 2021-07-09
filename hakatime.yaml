@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hakatime
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hakatime-cm
+  namespace: hakatime
+data:
+  HAKA_DB_HOST: postgres.postgres.svc.cluster.local
+  HAKA_DB_PORT: "5432"
+  HAKA_DB_NAME: postgres
+  HAKA_DB_USER: user
+  HAKA_DB_PASS: pass
+  HAKA_API_PREFIX: "http://192.168.18.149"
+  HAKA_BADGE_URL: "http://localhost:8080"
+  HAKA_PORT: "8080"
+  HAKA_SHIELDS_IO_URL: "https://img.shields.io"
+  HAKA_ENABLE_REGISTRATION: "true" 
+  HAKA_SESSION_EXPIRY: "24"
+  HAKA_LOG_LEVEL: "info" 
+  HAKA_ENV: "dev" 
+  HAKA_HTTP_LOG: "true" 
+  GITHUB_TOKEN: "<token>" 
+  HAKA_REMOTE_WRITE_URL: "https://wakatime.com/api/v1/users/current/heartbeats.bulk"
+  HAKA_REMOTE_WRITE_TOKEN: "<token>"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hakatime
+  namespace: hakatime
+  labels:
+    app: hakatime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hakatime
+  template:
+    metadata:
+      labels:
+        app: hakatime
+    spec:
+      containers:
+        - name: hakatime
+          image: mujx/hakatime:latest-arm
+          envFrom:
+            - configMapRef:
+                name: hakatime-cm
+          ports:
+            - containerPort: 8080
+              name: hakatime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hakatime
+  namespace: hakatime
+  labels:
+    app: hakatime
+spec:
+  selector:
+    app: hakatime
+  type: LoadBalancer
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: 8080
+  type: LoadBalancer
+  loadBalancerIP: 192.168.18.149
