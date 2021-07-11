@@ -11,9 +11,8 @@ add following lines on `/etc/exports`
 #### enable nfs client on workers
 
 $ apt install nfs-common
-add folowwing lines on `/etc/fstab`
+add following lines on `/etc/fstab`
 ```/etc/fstab
-> /etc/fstab
 192.168.18.100:/mnt/hd1		/mnt/hd1	nfs	defaults	0	0
 ```
 
