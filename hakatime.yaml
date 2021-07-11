@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: hakatime
-          image: mujx/hakatime:latest-arm
+          image: mujx/hakatime:latest
           envFrom:
             - configMapRef:
                 name: hakatime-cm
