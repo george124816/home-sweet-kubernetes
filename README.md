@@ -1,6 +1,30 @@
-### home sweet ~~home~~ kubernetes
+# home sweet ~~home~~ kubernetes
 
-storage: [nfs](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
+### storage: [nfs](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
+
+
+### enable nfs on main server
+
+$ apt install nfs-kernel-server
+
+add following lines on `/etc/exports`
+```
+/mnt/hd1	192.168.18.0/24(rw,wdelay,insecure,no_root_squash,no_subtree_check,sec=sys,rw,insecure,no_root_squash,no_all_squash)
+```
+
+## enable nfs client on workers
+
+$ apt install nfs-common
+
+add folowwing lines on `/etc/fstab`
+
+```/etc/fstab
+
+> /etc/fstab
+192.168.18.100:/mnt/hd1		/mnt/hd1	nfs	defaults	0	0
+```
+
+
 loadbalancer: [metalLB](https://github.com/metallb/metallb)
 
 - gitea
