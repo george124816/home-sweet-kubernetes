@@ -10,9 +10,9 @@ metadata:
   namespace: drone
 data:
   DRONE_GITEA_SERVER: http://192.168.18.140/
-  DRONE_GITEA_CLIENT_ID: GITEA_CLIENT_ID
-  DRONE_GITEA_CLIENT_SECRET: GITEA_CLIENT_SECRET
-  DRONE_RPC_SECRET: DRONE_SECRET
+  DRONE_GITEA_CLIENT_ID: CLIENT_ID
+  DRONE_GITEA_CLIENT_SECRET: CLIENT_SECRET
+  DRONE_RPC_SECRET: RPC_SECRET
   DRONE_SERVER_HOST: "192.168.18.141"
   DRONE_SERVER_PROTO: http
 ---
@@ -125,7 +125,6 @@ rules:
       - list
       - watch
       - update
-
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -169,4 +168,4 @@ spec:
             - name: DRONE_RPC_PROTO
               value: http
             - name: DRONE_RPC_SECRET
-              value: DRONE_SECRET
+              value: DRONE_RPC_SECRET
