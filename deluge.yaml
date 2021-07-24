@@ -107,7 +107,7 @@ spec:
             - configMapRef:
                 name: deluge-cm
           volumeMounts:
-            - mountPath: /conf
+            - mountPath: /config
               name: delugevol
             - mountPath: /data
               name: media-data
