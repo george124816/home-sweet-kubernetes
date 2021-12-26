@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: docker-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+        name: registry
+    spec:
+      nodeSelector:
+        node-type: worker
+      containers:
+      - name: registry
+        image: registry:2
+        ports:
+        - containerPort: 5000
+        env:
+        - name: REGISTRY_HTTP_TLS_CERTIFICATE
+          value: "/certs/registry.crt"
+        - name: REGISTRY_HTTP_TLS_KEY
+          value: "/certs/registry.key"
+        volumeMounts:
+        - name: lv-storage
+          mountPath: /var/lib/registry
+          subPath: registry
+        - name: lv-certs
+          mountPath: /certs
+      volumes:
+        - name: lv-storage
+          persistentVolumeClaim:
+            claimName: longhorn-docker-registry-pvc
+        - name: lv-certs
+          persistentVolumeClaim:
+            claimName: longhorn-docker-registry-pvc-cert
