@@ -17,36 +17,17 @@ data:
   DRONE_SERVER_PROTO: http
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: drone-pv
-  namespace: drone
-spec:
-  storageClassName: ""
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  nfs:
-    path: /mnt/hd1/kubernetes/drone
-    server: 192.168.18.100
-    readOnly: false
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: drone-pvc
   namespace: drone
 spec:
-  storageClassName: ""
-  volumeName: drone-pv
   accessModes:
-    - ReadWriteMany
-  volumeMode: Filesystem
+    - ReadWriteOnce
+  storageClassName: longhorn-sc
   resources:
     requests:
-      storage: 5Gi
+      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment

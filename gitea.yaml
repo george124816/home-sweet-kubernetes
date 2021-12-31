@@ -4,36 +4,17 @@ metadata:
   name: gitea
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: gitea-pv
-  namespace: gitea 
-spec:
-  storageClassName: ""
-  capacity:
-    storage: 5Gi 
-  accessModes:
-    - ReadWriteMany 
-  persistentVolumeReclaimPolicy: Retain 
-  nfs:
-    path: /mnt/hd1/kubernetes/gitea 
-    server: 192.168.18.100 
-    readOnly: false
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: gitea-pvc 
   namespace: gitea
 spec:
-  storageClassName: ""
-  volumeName: gitea-pv
   accessModes:
-    - ReadWriteMany 
-  volumeMode: Filesystem
+    - ReadWriteOnce
+  storageClassName: longhorn-sc
   resources:
     requests:
-      storage: 5Gi 
+      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
