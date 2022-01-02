@@ -59,7 +59,7 @@ metadata:
 spec:
   selector:
     app: gitea
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 80
       name: http
@@ -69,6 +69,22 @@ spec:
       name: ssh
       targetPort: 22
       protocol: TCP
-  type: LoadBalancer
-  loadBalancerIP: 192.168.18.140 
-
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: gitea
+  name: gitea-ingress
+spec:
+  rules:
+  - host: gitea.192.168.18.150.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gitea 
+            port:
+              number: 80
+  ingressClassName: nginx
