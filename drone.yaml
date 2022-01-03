@@ -1,8 +1,15 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app: drone
+  name: drone
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: drone-cm
-  namespace: default 
+  namespace: drone 
 data:
   DRONE_GITEA_SERVER: http://gitea.192.168.18.150.nip.io/
   DRONE_GITEA_CLIENT_ID: "CLIENT_ID"
@@ -15,7 +22,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: drone-pvc
-  namespace: default 
+  namespace: drone 
 spec:
   accessModes:
     - ReadWriteOnce
@@ -28,7 +35,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: drone
-  namespace: default 
+  namespace: drone 
   labels:
     app: drone
 spec:
@@ -62,7 +69,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: drone
-  namespace: default 
+  namespace: drone 
   labels:
     app: drone
 spec:
@@ -78,7 +85,7 @@ spec:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: default 
+  namespace: drone 
   name: drone
 rules:
   - apiGroups:
@@ -105,11 +112,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: drone
-  namespace: default 
+  namespace: drone 
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: default 
+    namespace: drone 
 roleRef:
   kind: Role
   name: drone
@@ -119,7 +126,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: drone-runner
-  namespace: default 
+  namespace: drone 
   labels:
     app.kubernetes.io/name: drone
 spec:
@@ -148,7 +155,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: default
+  namespace: drone 
   name: drone-ingress
 spec:
   rules:
