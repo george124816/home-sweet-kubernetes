@@ -1,9 +1,0 @@
-apiVersion: v1
-data:
-  02-custom.conf: |
-    address=/kube.local/192.168.18.150
-kind: ConfigMap
-metadata:
-  creationTimestamp: null
-  name: pihole-custom-dnsmasq
-  namespace: pihole
