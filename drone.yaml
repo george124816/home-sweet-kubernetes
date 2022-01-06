@@ -4,11 +4,11 @@ metadata:
   name: drone-cm
   namespace: default 
 data:
-  DRONE_GITEA_SERVER: http://gitea.192.168.18.150.nip.io/
+  DRONE_GITEA_SERVER: http://gitea.kube.home/
   DRONE_GITEA_CLIENT_ID: "CLIENT_ID"
   DRONE_GITEA_CLIENT_SECRET: "CLIENT_SECRET"
   DRONE_RPC_SECRET: "RPC_SECRET" 
-  DRONE_SERVER_HOST: "drone.192.168.18.150.nip.io"
+  DRONE_SERVER_HOST: "drone.kube.home"
   DRONE_SERVER_PROTO: http
 ---
 apiVersion: v1
@@ -139,7 +139,7 @@ spec:
             - containerPort: 3000
           env:
             - name: DRONE_RPC_HOST
-              value: "drone.192.168.18.150.nip.io"
+              value: "drone.kube.home"
             - name: DRONE_RPC_PROTO
               value: http
             - name: DRONE_RPC_SECRET
@@ -152,7 +152,7 @@ metadata:
   name: drone-ingress
 spec:
   rules:
-  - host: drone.192.168.18.150.nip.io
+  - host: drone.kube.home
     http:
       paths:
       - path: /

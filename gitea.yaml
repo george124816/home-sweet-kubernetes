@@ -77,7 +77,7 @@ metadata:
   name: gitea-ingress
 spec:
   rules:
-  - host: gitea.192.168.18.150.nip.io
+  - host: gitea.kube.home
     http:
       paths:
       - path: /
