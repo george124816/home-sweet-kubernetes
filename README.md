@@ -1,9 +1,7 @@
 # home sweet ~~home~~ kubernetes
 
-loadbalancer: [metalLB](https://github.com/metallb/metallb)
-
-storage: [longhorn](https://longhorn.io/)
-
+- longhorn
+- metalLB
 - gitea
 - postgres
 - hakatime
