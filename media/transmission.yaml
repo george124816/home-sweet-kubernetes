@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: media
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: transmission-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-sc
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: transmission
+  name: transmission 
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: transmission
+    spec:
+      volumes:
+        - name: transmission-pvc 
+          persistentVolumeClaim:
+            claimName: transmission-pvc
+        - name: media-pvc
+          persistentVolumeClaim:
+            claimName: media-pvc
+      containers:
+        - env:
+            - name: PGID
+              value: "\x31\x30\x30"
+            - name: PUID
+              value: "\x31\x30\x33\x35"
+            - name: VERSION
+              value: latest
+            - name: TZ
+              value: America/Fortaleza
+          image: ghcr.io/linuxserver/transmission
+          imagePullPolicy: Always
+          name: transmission
+          ports:
+            - containerPort: 9091 
+              name: tranmission-web
+              protocol: TCP
+            - containerPort: 51413
+              name: torrent-tcp
+              protocol: TCP
+            - containerPort: 51413
+              name: torrent-ucp
+              protocol: UDP
+          resources: {}
+          stdin: true
+          tty: true
+          volumeMounts:
+            - mountPath: /config
+              name: transmission-pvc
+            - mountPath: /downloads
+              name: media-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission
+  namespace: media
+  labels:
+    app: transmission
+spec:
+  selector:
+    app: transmission
+  type: NodePort
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: 9091
+    - port: 51413
+      name: torrent-tcp
+      protocol: TCP
+      targetPort: 51413
+    - port: 51413
+      name: torrent-udp
+      protocol: UDP
+      targetPort: 51413
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: media
+  name: transmission-ingress
+spec:
+  rules:
+  - host: media.kube.home
+    http:
+      paths:
+      - path: /torrent
+        pathType: Prefix
+        backend:
+          service:
+            name: transmission
+            port:
+              number: 80
+  ingressClassName: nginx
