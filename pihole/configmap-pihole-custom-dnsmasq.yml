@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   02-custom.conf: |
-    address=/kube.home/192.168.18.150
+    address=/kube.home/10.0.0.150
 kind: ConfigMap
 metadata:
   creationTimestamp: null

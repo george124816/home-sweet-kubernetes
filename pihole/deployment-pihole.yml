@@ -26,7 +26,7 @@ spec:
       containers:
       - env:
         - name: ServerIP
-          value: 192.168.18.111
+          value: 10.0.0.111
         - name: WEBPASSWORD
           valueFrom:
             secretKeyRef:
