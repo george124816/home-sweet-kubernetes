@@ -11,7 +11,7 @@ metadata:
   name: drone-cm
   namespace: drone 
 data:
-  DRONE_GITEA_SERVER: http://gitea.kube.home/
+  DRONE_GITEA_SERVER: http://git.kube.home/
   DRONE_GITEA_CLIENT_ID: "CLIENT_ID"
   DRONE_GITEA_CLIENT_SECRET: "CLIENT_SECRET"
   DRONE_RPC_SECRET: "RPC_SECRET" 

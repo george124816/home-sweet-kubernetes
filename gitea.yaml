@@ -77,7 +77,7 @@ metadata:
   name: gitea-ingress
 spec:
   rules:
-  - host: gitea.kube.home
+  - host: git.kube.home
     http:
       paths:
       - path: /
