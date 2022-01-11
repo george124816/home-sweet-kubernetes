@@ -10,3 +10,22 @@ parameters:
   staleReplicaTimeout: "2880" # 48 hours in minutes
   fsType: "ext4"
   nodeSelector: "storage"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: longhorn-system
+  name: longhorn-ingress
+spec:
+  rules:
+  - host: longhorn.kube.home
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: longhorn-frontend
+            port:
+              number: 80
+  ingressClassName: nginx
