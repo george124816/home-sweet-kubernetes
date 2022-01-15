@@ -17,6 +17,7 @@ data:
   DRONE_RPC_SECRET: "RPC_SECRET" 
   DRONE_SERVER_HOST: "drone.kube.home"
   DRONE_SERVER_PROTO: http
+  DRONE_USER_CREATE: "username:george124816,admin:true"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
